@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock-Paper-Scissor Game</title>
+    <link rel="icon" type="image/x-icon" href="images.jpeg">
+    <link rel="stylesheet" href="nayab.css">
+</head>
+<body>
+    <nav>
+        <h1>ROCK PAPER SCISSOR</h1>
+    </nav>
+
+    <!-- Container for the RPS buttons -->
+    <div class="container">
+        <button class="rps"><img src="rock.jpeg" alt="Rock"></button>
+        <button class="rps"><img src="scissors.jpeg" alt="Scissors"></button>
+        <button class="rps"><img src="papers.jpeg" alt="Paper"></button>
+    </div>
+
+    <!-- Play button under the RPS buttons -->
+    <div class="play-container">
+        <button id="turn">PLAY</button>
+    </div>
+
+    <div id="result"></div>
+ 
+    <script src="nayab.js"></script>
+</body>
+</html>
+* {
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: black;
+    color: white;
+    text-align: center;
+    height: 12vh;
+    margin-bottom: 5vmin;
+}
+
+nav h1 {
+    text-align: center;
+    line-height: 5rem;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 5vmin;
+    margin-top: 10vmin;
+}
+
+.rps {
+    border: none;
+    background-color: transparent;
+}
+
+.rps img {
+    width: 100px;
+    height: 100px;
+    transition: transform 0.2s;
+}
+
+.rps img:hover {
+    transform: scale(1.1);
+}
+
+.play-container {
+    text-align: center;
+    margin-top: 2vmin;
+}
+
+#turn {
+    font-size: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: black;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+.play-container #turn:hover {
+    transform: scale(1.1);
+}
+
+#result {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.result-tie {
+    color: yellow;
+}
+
+.result-win {
+    color: green;
+}
+
+.result-error {
+    color: red !important;
+    
+}
+    let rps_buttons = document.querySelectorAll(".rps");
+    let play_button = document.querySelector("#turn");
+    let userChoice = "";
+    let result_div = document.querySelector("#result");
+
+    rps_buttons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            if (index === 0) userChoice = "rock";
+            else if (index == 1) userChoice = "scissors";
+            else if (index === 2) userChoice = "paper";
+            play_button.classList.remove("result-error");
+            result_div.innerHTML = "";
+        });
+    });
+
+    let playgame = () => {
+        if (!userChoice) {
+            result_div.innerHTML = "Please select any options as you see Rock, Scissor or Paper";
+            result_div.className="result-error";
+            return;
+        }
+
+        let randomChoice = Math.floor(Math.random() * 3);
+        let computerChoice = ['rock', 'scissors', 'paper'][randomChoice];
+        let result = checkWinner(userChoice, computerChoice);
+        result_div.innerHTML = `Computer selected: ${computerChoice}<br> and You have selected: ${userChoice}<br>${result}`;
+
+        if (result === "It's a tie!") {
+            result_div.className = "result-tie";
+        } else if (result === "You win!" || result === "Computer wins!" ) {
+            result_div.className = "result-win";
+        } else {
+            result_div.className = "result-error";
+        }
+    };
+
+    let checkWinner = (user, computer) => {
+        if (user === computer) {
+            return "It's a tie!";
+        }
+        if (
+            (user === 'rock' && computer === 'scissors') ||
+            (user === 'scissors' && computer === 'paper') ||
+            (user === 'paper' && computer === 'rock')
+        ) {
+            return "You win!";
+        } else {
+            return "Computer wins!";
+        }
+    };
+
+    play_button.addEventListener("click", playgame);
